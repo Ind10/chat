@@ -33,14 +33,15 @@
 <script>
 var ws;
 var stompClient;
-
+var isUseHTTPs  = true;
+var port = 443; 
 $(document).ready(function () {
 
 	$('#button').click(function (){	
 		sendForm();
 		$('#message').val('');	
 	});
-	ws = new SockJS("questions");
+	ws = new SockJS("https://ind10.herokuapp.com:443/questions");
 	stompClient = Stomp.over(ws);
 	
 	
