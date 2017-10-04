@@ -20,6 +20,10 @@
 </div>
 
 <div class="form-group">
+<input class="form-control" type="text" name="name" id="name" placeholder="Name" >
+</div>
+
+<div class="form-group">
 <input class="form-control" type="text" name="question" id="message" placeholder="Message" >
 </div>
 
@@ -38,17 +42,21 @@ var port = 443;
 $(document).ready(function () {
 
 	$('#button').click(function (){	
+		
+		if(sessionStorage) {
+			sessionStorage.setItem("name", $('#name').val());
+		}
 		sendForm();
 		$('#message').val('');	
 	});
-	ws = new SockJS("https://ind10.herokuapp.com:443/questions");
+	ws = new SockJS("questions");
 	stompClient = Stomp.over(ws);
 	
 	
 	stompClient.connect({},function (frame) {		
 		stompClient.subscribe("/topic/questions",function(message) {
 			var myTextArea = $('#result');
-			myTextArea.val(myTextArea.val() + '\n'+message.body);
+			myTextArea.val(myTextArea.val() + '\n'+sessionStorage.getItem("name")+' : '+message.body);
 		});	
 	});	
 	
@@ -57,4 +65,5 @@ $(document).ready(function () {
 function sendForm(){
 	stompClient.send("/topic/questions",{} , $("#message").val());
 };
+
 </script>
